@@ -31,7 +31,7 @@ interface Events {
 
   @delete
   @added(Versions.v1)
-  op delete(@path id: string): Event;
+  op delete(@path id: string): void;
 }
 
 enum Versions {
