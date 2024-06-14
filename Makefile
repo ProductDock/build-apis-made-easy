@@ -3,3 +3,9 @@ install-spec-package:
 
 tsp-compile:
 	cd spec && tsp compile . --output-dir ../tsp-output
+
+go-generate:
+	cd server-go && go generate ./...
+
+go-build:
+	cd server-go && go build -o server .
