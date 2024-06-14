@@ -1,0 +1,132 @@
+openapi: 3.0.0
+info:
+  title: Event Service
+  version: v1
+tags:
+  - name: Events
+paths:
+  /events:
+    post:
+      tags:
+        - Events
+      operationId: Events_create
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventError'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+    get:
+      tags:
+        - Events
+      operationId: Events_list
+      parameters:
+        - name: filter
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+  /events/{id}:
+    get:
+      tags:
+        - Events
+      operationId: Events_read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+    delete:
+      tags:
+        - Events
+      operationId: Events_delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+components:
+  schemas:
+    Event:
+      type: object
+      required:
+        - id
+        - name
+        - date
+        - location
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          description: Name of the event
+        date:
+          type: string
+          format: date-time
+          description: When the event takes place
+        location:
+          allOf:
+            - $ref: '#/components/schemas/Location'
+          description: Where will it be held
+    EventError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+      description: Error
+    Location:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+    Versions:
+      type: string
+      enum:
+        - v1
