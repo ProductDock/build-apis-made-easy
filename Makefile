@@ -9,3 +9,6 @@ go-generate:
 
 go-build:
 	cd server-go && go build -o server .
+
+jvm-generate:
+	cd server-jvm && ./mvnw clean compile
