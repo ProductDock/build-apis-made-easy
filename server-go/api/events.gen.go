@@ -14,14 +14,14 @@ import (
 
 // Event defines model for Event.
 type Event struct {
-	// Date When the event takes place
+	// Date The scheduled date and time of the event
 	Date time.Time `json:"date"`
 	Id   string    `json:"id"`
 
-	// Location Where will it be held
+	// Location Information about the venue where the event will be held
 	Location Location `json:"location"`
 
-	// Name Name of the event
+	// Name The name of the event
 	Name string `json:"name"`
 }
 
@@ -36,9 +36,9 @@ type Location struct {
 	Name string `json:"name"`
 }
 
-// EventsListParams defines parameters for EventsList.
-type EventsListParams struct {
-	Filter string `form:"filter" json:"filter"`
+// EventsFindByNameFuzzyParams defines parameters for EventsFindByNameFuzzy.
+type EventsFindByNameFuzzyParams struct {
+	Name string `form:"name" json:"name"`
 }
 
 // EventsCreateJSONRequestBody defines body for EventsCreate for application/json ContentType.
@@ -48,7 +48,7 @@ type EventsCreateJSONRequestBody = Event
 type ServerInterface interface {
 
 	// (GET /events)
-	EventsList(c *gin.Context, params EventsListParams)
+	EventsFindByNameFuzzy(c *gin.Context, params EventsFindByNameFuzzyParams)
 
 	// (POST /events)
 	EventsCreate(c *gin.Context)
@@ -69,26 +69,26 @@ type ServerInterfaceWrapper struct {
 
 type MiddlewareFunc func(c *gin.Context)
 
-// EventsList operation middleware
-func (siw *ServerInterfaceWrapper) EventsList(c *gin.Context) {
+// EventsFindByNameFuzzy operation middleware
+func (siw *ServerInterfaceWrapper) EventsFindByNameFuzzy(c *gin.Context) {
 
 	var err error
 
 	// Parameter object where we will unmarshal all parameters from the context
-	var params EventsListParams
+	var params EventsFindByNameFuzzyParams
 
-	// ------------- Required query parameter "filter" -------------
+	// ------------- Required query parameter "name" -------------
 
-	if paramValue := c.Query("filter"); paramValue != "" {
+	if paramValue := c.Query("name"); paramValue != "" {
 
 	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Query argument filter is required, but not found"), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Query argument name is required, but not found"), http.StatusBadRequest)
 		return
 	}
 
-	err = runtime.BindQueryParameter("form", true, true, "filter", c.Request.URL.Query(), &params.Filter)
+	err = runtime.BindQueryParameter("form", true, true, "name", c.Request.URL.Query(), &params.Name)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter filter: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter name: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -99,7 +99,7 @@ func (siw *ServerInterfaceWrapper) EventsList(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.EventsList(c, params)
+	siw.Handler.EventsFindByNameFuzzy(c, params)
 }
 
 // EventsCreate operation middleware
@@ -190,7 +190,7 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 		ErrorHandler:       errorHandler,
 	}
 
-	router.GET(options.BaseURL+"/events", wrapper.EventsList)
+	router.GET(options.BaseURL+"/events", wrapper.EventsFindByNameFuzzy)
 	router.POST(options.BaseURL+"/events", wrapper.EventsCreate)
 	router.DELETE(options.BaseURL+"/events/:id", wrapper.EventsDelete)
 	router.GET(options.BaseURL+"/events/:id", wrapper.EventsRead)

@@ -16,8 +16,8 @@ type EventService struct {
 	Store EventStorer
 }
 
-func (es *EventService) EventsList(c *gin.Context, params EventsListParams) {
-	c.JSON(http.StatusOK, es.Store.FindByNameFuzzy(params.Filter))
+func (es *EventService) EventsFindByNameFuzzy(c *gin.Context, params EventsFindByNameFuzzyParams) {
+	c.JSON(http.StatusOK, es.Store.FindByNameFuzzy(params.Name))
 }
 
 func (es *EventService) EventsCreate(c *gin.Context) {

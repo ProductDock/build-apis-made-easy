@@ -24,7 +24,7 @@ interface Events {
   op create(@body event: Event): Event | EventError;
 
   @added(Versions.v1)
-  op list(@query filter: string): Event[];
+  op findByNameFuzzy(@query name: string): Event[];
 
   @added(Versions.v1)
   op read(@path id: string): Event;
@@ -35,5 +35,5 @@ interface Events {
 }
 
 enum Versions {
-  v1
+  v1,
 }

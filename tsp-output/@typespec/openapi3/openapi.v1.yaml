@@ -33,9 +33,9 @@ paths:
     get:
       tags:
         - Events
-      operationId: Events_list
+      operationId: Events_findByNameFuzzy
       parameters:
-        - name: filter
+        - name: name
           in: query
           required: true
           schema:
@@ -98,15 +98,15 @@ components:
           type: string
         name:
           type: string
-          description: Name of the event
+          description: The name of the event
         date:
           type: string
           format: date-time
-          description: When the event takes place
+          description: The scheduled date and time of the event
         location:
           allOf:
             - $ref: '#/components/schemas/Location'
-          description: Where will it be held
+          description: Information about the venue where the event will be held
     EventError:
       type: object
       required:

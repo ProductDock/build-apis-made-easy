@@ -11,11 +11,11 @@ using TypeSpec.Rest;
 model Event {
   @key
   id: string;
-  @doc("Name of the event")
+  @doc("The name of the event")
   name: string;
-  @doc("When the event takes place")
+  @doc("The scheduled date and time of the event")
   date: utcDateTime;
-  @doc("Where will it be held")
+  @doc("Information about the venue where the event will be held")
   location: Location;
 }
 

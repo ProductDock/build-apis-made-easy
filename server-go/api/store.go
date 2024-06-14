@@ -7,7 +7,6 @@ import (
 
 type EventStorer interface {
 	Add(e Event) (Event, error)
-	GetAll() []Event
 	FindById(id string) (*Event, error)
 	DeleteById(id string) bool
 	FindByNameFuzzy(name string) []Event
@@ -26,10 +25,6 @@ type InMemoryEventStore struct {
 func (i *InMemoryEventStore) Add(e Event) (Event, error) {
 	i.events = append(i.events, e)
 	return e, nil
-}
-
-func (i *InMemoryEventStore) GetAll() []Event {
-	return i.events
 }
 
 func (i *InMemoryEventStore) DeleteById(id string) bool {
