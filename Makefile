@@ -10,8 +10,14 @@ go-generate:
 go-build:
 	cd server-go && go build -o server .
 
+run-go: install-spec-package tsp-compile go-generate go-build
+	cd server-go && ./server
+
 jvm-generate:
 	cd server-jvm && ./mvnw clean compile
+
+run-jvm: install-spec-package tsp-compile
+	cd server-jvm && ./mvnw spring-boot:run
 
 run-portman:
 	# Port OpenAPI Spec to Postman Collection
